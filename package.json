@@ -1,0 +1,70 @@
+{
+  "name": "eslint-plugin-em-dash-checker",
+  "version": "1.0.0",
+  "description": "ESLint plugin to detect and suggest replacements for em-dash characters",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "em-dash",
+    "typography",
+    "linting"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bnap00/eslint-plugin-em-dash-checker.git"
+  },
+  "homepage": "https://github.com/bnap00/eslint-plugin-em-dash-checker#readme",
+  "bugs": {
+    "url": "https://github.com/bnap00/eslint-plugin-em-dash-checker/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "peerDependencies": {
+    "eslint": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@types/eslint": "^9.6.0",
+    "@types/estree": "^1.0.5",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/rule-tester": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^2.0.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm run test"
+  }
+}
