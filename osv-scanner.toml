@@ -1,0 +1,6 @@
+# OSV-Scanner config: https://google.github.io/osv-scanner/configuration/
+
+[[IgnoredVulns]]
+id = "GHSA-g3hv-75wg-m249"
+ignoreUntil = 2027-02-01T00:00:00Z
+reason = "minimatch <11.0.1 globparts DoS. Dev-only, pulled in by eslint 9 and typescript-eslint (no upstream fix on those majors); glob patterns are repo-controlled. Not shipped: the published package has no dependencies."
