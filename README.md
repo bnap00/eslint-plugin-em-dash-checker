@@ -154,6 +154,19 @@ A: Those are fine. We're not monsters.
 **Q: Will this make my code look more human?**
 A: It's one less tell. You're on your own for the rest.
 
+## Security
+
+Please report vulnerabilities privately; see [SECURITY.md](SECURITY.md).
+
+Contributors: this repo ships a [Gitleaks](https://github.com/gitleaks/gitleaks) pre-commit hook to stop secrets from being committed. Install it once with:
+
+```bash
+pipx install pre-commit   # or: brew install pre-commit
+pre-commit install
+```
+
+Development requires Node 20+ (the published plugin itself supports Node 18+).
+
 ## License
 
 MIT — wait, I mean MIT--no, just MIT.

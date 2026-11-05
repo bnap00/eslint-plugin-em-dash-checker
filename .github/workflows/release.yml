@@ -1,0 +1,65 @@
+name: Release
+
+# Publishes to npm via trusted publishing (OIDC): no NPM_TOKEN secret is used.
+# Requires the trusted publisher to be configured on npmjs.com for this
+# repository and workflow file (release.yml).
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Test before publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+
+  publish:
+    name: Publish to npm
+    needs: test
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write # OIDC token for npm trusted publishing + provenance
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          # Trusted publishing needs npm >= 11.5.1 (bundled with Node 24).
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: Check release tag matches package.json version
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="$(node -p 'require("./package.json").version')"
+          if [ "${TAG#v}" != "$VERSION" ]; then
+            echo "::error::Release tag ${TAG} does not match package.json version ${VERSION}"
+            exit 1
+          fi
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npm pack --dry-run
+      # Build and tests already ran above, so skip prepublishOnly.
+      - run: npm publish --provenance --access public --ignore-scripts
